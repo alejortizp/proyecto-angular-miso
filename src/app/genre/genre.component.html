@@ -1,0 +1,39 @@
+<div class="genre-container">
+  <h1>Géneros de Películas</h1>
+  
+  <div class="genre-summary">
+    <p>Total de géneros: <strong>{{ genres.length }}</strong></p>
+  </div>
+
+  <div class="genre-list">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Número de Películas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let genre of genres">
+          <td>{{ genre.id }}</td>
+          <td><strong>{{ genre.name }}</strong></td>
+          <td>{{ genre.description }}</td>
+          <td>{{ genre.movieCount }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="genre-cards">
+    <h2>Vista por Tarjetas</h2>
+    <div class="cards-container">
+      <div class="genre-card" *ngFor="let genre of genres">
+        <h3>{{ genre.name }}</h3>
+        <p>{{ genre.description }}</p>
+        <span class="movie-count">{{ genre.movieCount }} películas</span>
+      </div>
+    </div>
+  </div>
+</div>
