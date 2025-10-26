@@ -9,21 +9,32 @@ import { DirectorService } from './director.service';
 })
 export class DirectorComponent implements OnInit {
 
-  constructor(private directorService: DirectorService) { }
-
   directors: Array<Director> = [];
+  filteredDirectors: Array<Director> = [];
+  searchText: string = '';
+
+  constructor(private directorService: DirectorService) { }
 
   getDirectors() {
     this.directorService.getDirectors().subscribe(data => {
-      this.directors = data;
-      console.log(this.directors);
+      // Ordenar alfabéticamente A → Z
+      this.directors = data.sort((a, b) => a.name.localeCompare(b.name));
+      this.filteredDirectors = [...this.directors]; // copia inicial
     });
-    console.log('After subscribe');
   }
 
+  filterDirectors() {
+    const text = this.searchText.trim().toLowerCase();
+    if (text === '') {
+      this.filteredDirectors = [...this.directors]; // sin filtro
+    } else {
+      this.filteredDirectors = this.directors.filter(director =>
+        director.name.toLowerCase().includes(text)
+      );
+    }
+  }
 
   ngOnInit() {
     this.getDirectors();
   }
-
 }

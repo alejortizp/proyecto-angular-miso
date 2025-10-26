@@ -1,37 +1,39 @@
-<div class = "filtro">
-<input type="text" class="form-control" id="texto-busqueda" placeholder="Find by name">
-<button type="button" id="boton-filtro" class="btn btn-success">Search</button>
+<div class="filtro mb-3 d-flex align-items-center gap-2">
+  <input 
+    type="text" 
+    class="form-control" 
+    placeholder="Find by name" 
+    [(ngModel)]="searchText"
+  >
+  <button 
+    type="button" 
+    class="btn btn-success"
+    (click)="filterDirectors()"
+  >
+    Search
+  </button>
 </div>
+
 <div class="container-fluid">
-  <div class="col-6">
-    <table class="table">
-      <thead>
+  <div class="col-12">
+    <table class="table table-striped table-bordered text-center">
+      <thead class="thead-dark">
         <tr>
-          <th class="h4">Name</th>
-          <th class="h4">Photo Url</th>
-          <th class="h4">Nationality</th>
-          <th class="h4">Birth Date</th>
-          <th class="h4">Biography</th>
+          <th>Name</th>
+          <th>Photo Url</th>
+          <th>Nationality</th>
+          <th>Birth Date</th>
+          <th>Biography</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let c of directors">
-          <td>
-            <dd>{{c.name}}</dd>
-          </td>
-          <td>
-            <dd>{{c.photo}}</dd>
-          </td>
-          <td>
-            <dd>{{c.nationality}}</dd>
-          </td>
-          <td>
-            <dd>{{c.birthDate}}</dd>
-          </td>
-          <td>
-            <dd>{{c.biography}}</dd>
-          </td>
-      </tr>
+        <tr *ngFor="let c of filteredDirectors">
+          <td>{{ c.name }}</td>
+          <td><img [src]="c.photo" alt="{{c.name}}" width="100"></td>
+          <td>{{ c.nationality }}</td>
+          <td>{{ c.birthDate | date:'yyyy-MM-dd' }}</td>
+          <td>{{ c.biography }}</td>
+        </tr>
       </tbody>
     </table>
   </div>
