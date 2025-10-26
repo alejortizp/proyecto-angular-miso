@@ -1,0 +1,34 @@
+<div class="container-fluid">
+  <div class="col-6">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="h4">Name</th>
+          <th class="h4">Photo Url</th>
+          <th class="h4">Nationality</th>
+          <th class="h4">Birth Date</th>
+          <th class="h4">Biography</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of persons">
+          <td>
+            <dd>{{c.name}}</dd>
+          </td>
+          <td>
+            <dd>{{c.photo}}</dd>
+          </td>
+          <td>
+            <dd>{{c.nationality}}</dd>
+          </td>
+          <td>
+            <dd>{{c.birthDate}}</dd>
+          </td>
+          <td>
+            <dd>{{c.biography}}</dd>
+          </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
