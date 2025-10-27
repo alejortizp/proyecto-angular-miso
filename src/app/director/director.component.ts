@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Director } from './director'; 
+import { Director } from './director';
 import { DirectorService } from './director.service';
 
 @Component({
@@ -8,33 +8,27 @@ import { DirectorService } from './director.service';
   styleUrls: ['./director.component.css']
 })
 export class DirectorComponent implements OnInit {
-
-  directors: Array<Director> = [];
-  filteredDirectors: Array<Director> = [];
+  directors: Director[] = [];
+  filteredDirectors: Director[] = [];
   searchText: string = '';
 
-  constructor(private directorService: DirectorService) { }
+  constructor(private directorService: DirectorService) {}
 
-  getDirectors() {
+  ngOnInit(): void {
+    this.getDirectors();
+  }
+
+  getDirectors(): void {
     this.directorService.getDirectors().subscribe(data => {
-      // Ordenar alfabéticamente A → Z
       this.directors = data.sort((a, b) => a.name.localeCompare(b.name));
-      this.filteredDirectors = [...this.directors]; // copia inicial
+      this.filteredDirectors = [...this.directors];
     });
   }
 
-  filterDirectors() {
-    const text = this.searchText.trim().toLowerCase();
-    if (text === '') {
-      this.filteredDirectors = [...this.directors]; // sin filtro
-    } else {
-      this.filteredDirectors = this.directors.filter(director =>
-        director.name.toLowerCase().includes(text)
-      );
-    }
-  }
-
-  ngOnInit() {
-    this.getDirectors();
+  filterDirectors(): void {
+    const text = this.searchText.toLowerCase().trim();
+    this.filteredDirectors = this.directors.filter(d =>
+      d.name.toLowerCase().includes(text)
+    );
   }
 }
