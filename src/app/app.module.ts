@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DirectorModule } from './director/director.module';
+import { MovieModule } from './movie/movie.module';
 
 @NgModule({
   declarations: [		
@@ -14,6 +15,7 @@ import { DirectorModule } from './director/director.module';
     BrowserModule,
     AppRoutingModule,
     DirectorModule,
+    MovieModule,
     HttpClientModule
   ],
   providers: [],
