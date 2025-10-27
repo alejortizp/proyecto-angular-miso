@@ -1,0 +1,19 @@
+<div class="container mt-4">
+  <h2 class="fw-bold mb-4">Genres</h2>
+
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Filter by name"
+      [(ngModel)]="searchText"
+      class="form-control"
+    />
+    <button class="btn btn-dark" (click)="filterGenres()">Search</button>
+  </div>
+
+  <div class="genre-grid">
+    <div class="genre-card" *ngFor="let d of filteredGenres">
+      <h6>{{ d.type }}</h6>
+    </div>
+  </div>
+</div>

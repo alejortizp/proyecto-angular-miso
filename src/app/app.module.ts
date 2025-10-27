@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { DirectorModule } from './director/director.module';
 import { MovieModule } from './movie/movie.module';
 import { ActorModule } from './actor/actor.module';
+import { GenreModule } from './genre/genre.module';
 
 @NgModule({
   declarations: [		
@@ -18,7 +19,8 @@ import { ActorModule } from './actor/actor.module';
     DirectorModule,
     MovieModule,
     ActorModule,
-    HttpClientModule
+    HttpClientModule,
+    GenreModule
   ],
   providers: [],
   bootstrap: [AppComponent]
