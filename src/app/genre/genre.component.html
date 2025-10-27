@@ -12,7 +12,6 @@
           <th>ID</th>
           <th>Nombre</th>
           <th>Descripción</th>
-          <th>Número de Películas</th>
         </tr>
       </thead>
       <tbody>
@@ -20,7 +19,6 @@
           <td>{{ genre.id }}</td>
           <td><strong>{{ genre.name }}</strong></td>
           <td>{{ genre.description }}</td>
-          <td>{{ genre.movieCount }}</td>
         </tr>
       </tbody>
     </table>
@@ -32,7 +30,6 @@
       <div class="genre-card" *ngFor="let genre of genres">
         <h3>{{ genre.name }}</h3>
         <p>{{ genre.description }}</p>
-        <span class="movie-count">{{ genre.movieCount }} películas</span>
       </div>
     </div>
   </div>

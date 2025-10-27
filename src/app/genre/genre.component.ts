@@ -14,14 +14,14 @@ export class GenreComponent implements OnInit {
   ngOnInit() {
     // Datos de ejemplo - Estos vendrían de un servicio/API
     this.genres = [
-      new Genre(1, 'Acción', 'Películas con escenas de acción intensa', 45),
-      new Genre(2, 'Comedia', 'Películas divertidas y humorísticas', 38),
-      new Genre(3, 'Drama', 'Películas con historias emotivas', 52),
-      new Genre(4, 'Ciencia Ficción', 'Películas futuristas y tecnológicas', 28),
-      new Genre(5, 'Terror', 'Películas de miedo y suspenso', 22),
-      new Genre(6, 'Romance', 'Películas de amor y relaciones', 31),
-      new Genre(7, 'Animación', 'Películas animadas para toda la familia', 19),
-      new Genre(8, 'Thriller', 'Películas de suspenso psicológico', 26),
+      new Genre(1, 'Acción', 'Películas con escenas de acción intensa'),
+      new Genre(2, 'Comedia', 'Películas divertidas y humorísticas'),
+      new Genre(3, 'Drama', 'Películas con historias emotivas'),
+      new Genre(4, 'Ciencia Ficción', 'Películas futuristas y tecnológicas'),
+      new Genre(5, 'Terror', 'Películas de miedo y suspenso'),
+      new Genre(6, 'Romance', 'Películas de amor y relaciones'),
+      new Genre(7, 'Animación', 'Películas animadas para toda la familia'),
+      new Genre(8, 'Thriller', 'Películas de suspenso psicológico'),
     ];
   }
 }
