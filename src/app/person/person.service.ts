@@ -14,7 +14,6 @@ export class PersonService {
 constructor(private http: HttpClient) { }
 
   getPersons(): Observable<Person[]> {
-    console.log(this.apiUrl);
     return this.http.get<Person[]>(this.apiUrl);
   }
 }
