@@ -24,17 +24,24 @@ export class GenreService {
   }
 
   getMoviesByGenre(genreId: string | number): Observable<Movie[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/${genreId}/movies`).pipe(
-      map((items: any[]) => items.map((item: any) => {
-        const movie: Movie = new Movie();
-        movie.id = item.id;
-        movie.title = item.title;
-        movie.poster = item.poster;
-        movie.duration = item.duration;
-        movie.country = item.country;
-        movie.releaseDate = new Date(item.releaseDate);
-        movie.popularity = item.popularity;
-        return movie;
-      }))
+    return this.http.get<any>(`${this.apiUrl}/${genreId}`).pipe(
+      map((genreData: any) => {
+        // Extraer el array de películas del objeto género
+        if (genreData.movies && Array.isArray(genreData.movies)) {
+          return genreData.movies.map((item: any) => {
+            const movie: Movie = new Movie();
+            movie.id = item.id;
+            movie.title = item.title;
+            movie.poster = item.poster;
+            movie.duration = item.duration;
+            movie.country = item.country;
+            movie.releaseDate = new Date(item.releaseDate);
+            movie.popularity = item.popularity;
+            return movie;
+          });
+        }
+        return [];
+      })
     );
   }
+}
