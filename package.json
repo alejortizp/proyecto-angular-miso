@@ -7,9 +7,11 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "test:headless": "ng test --browsers=ChromeHeadless --watch=false",
+    "test:watch": "ng test --browsers=ChromeHeadless",
     "test:ci": "ng test --watch=false --browsers=ChromeHeadless",
-    "test:coverage": "ng test --watch=false --code-coverage --browsers=ChromeHeadless",
-    "test:genre": "ng test --include='**/genre/**/*.spec.ts' --watch=false --browsers=ChromeHeadless"
+    "test:coverage": "ng test --browsers=ChromeHeadless --watch=false --code-coverage",
+    "test:genre": "ng test --include='**/genre/**/*.spec.ts' --browsers=ChromeHeadless --watch=false"
   },
   "private": true,
   "dependencies": {
