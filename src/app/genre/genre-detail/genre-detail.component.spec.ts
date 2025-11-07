@@ -16,6 +16,7 @@ describe('GenreDetailComponent', () => {
   let component: GenreDetailComponent;
   let fixture: ComponentFixture<GenreDetailComponent>;
   let mockGenreService: jasmine.SpyObj<GenreService>;
+  let testGenreId: string;
 
   const mockGenre: Genre = new Genre(1, 'Action');
 
@@ -94,7 +95,8 @@ describe('GenreDetailComponent', () => {
 
     component.ngOnInit();
 
-    expect(component.genreId).toBe(1);
+    expect(component.genreId).toBe(testGenreId); // String, no número
+    expect(mockGenreService.getGenreById).toHaveBeenCalledWith(testGenreId);
   });
 
   it('should sort movies alphabetically by title', () => {
