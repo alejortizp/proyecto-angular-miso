@@ -1,18 +1,23 @@
-import { TestBed } from '@angular/core/testing';
+/* tslint:disable:no-unused-variable */
+
+import { TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { GenreService } from './genre.service';
-import { Genre } from './genre.model';
+import { Genre } from './genre';
+import { Movie } from '../movie/movie';
+import { environment } from '../../environments/environment.development';
 
-describe('GenreService', () => {
+describe('Service: Genre', () => {
   let service: GenreService;
   let httpMock: HttpTestingController;
-  const apiUrl = 'http://localhost:3000/api/genres';
+  const baseUrl = environment.baseUrl + 'genres';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [GenreService]
     });
+    
     service = TestBed.inject(GenreService);
     httpMock = TestBed.inject(HttpTestingController);
   });
@@ -21,50 +26,68 @@ describe('GenreService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+  it('should be created', inject([GenreService], (genreService: GenreService) => {
+    expect(genreService).toBeTruthy();
+  }));
 
-  it('should get all genres', () => {
+  it('should retrieve all genres', () => {
     const mockGenres: Genre[] = [
-      { id: 1, name: 'Acción', description: 'Películas de acción' },
-      { id: 2, name: 'Comedia', description: 'Películas de comedia' }
+      new Genre(1, 'Action'),
+      new Genre(2, 'Comedy')
     ];
 
-    service.getGenres().subscribe(genres => {
+    service.getGenres().subscribe((genres: Genre[]) => {
       expect(genres.length).toBe(2);
       expect(genres).toEqual(mockGenres);
     });
 
-    const req = httpMock.expectOne(apiUrl);
+    const req = httpMock.expectOne(baseUrl);
     expect(req.request.method).toBe('GET');
     req.flush(mockGenres);
   });
 
-  it('should get genre by id', () => {
-    const mockGenre: Genre = { id: 1, name: 'Acción', description: 'Películas de acción' };
+  it('should retrieve a genre by id', () => {
+    const mockGenre = { id: 1, type: 'Action' };
 
-    service.getGenreById(1).subscribe(genre => {
-      expect(genre).toEqual(mockGenre);
+    service.getGenreById(1).subscribe((genre: Genre) => {
+      expect(genre.id).toBe(1);
+      expect(genre.type).toBe('Action');
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/1`);
+    const req = httpMock.expectOne(`${baseUrl}/1`);
     expect(req.request.method).toBe('GET');
     req.flush(mockGenre);
   });
 
-  it('should get movies by genre id', () => {
+  it('should retrieve movies by genre id', () => {
     const mockMovies = [
-      { id: 1, title: 'Movie 1', genreId: 1 },
-      { id: 2, title: 'Movie 2', genreId: 1 }
+      {
+        id: '1',
+        title: 'Avatar',
+        poster: 'avatar.jpg',
+        duration: 120,
+        country: 'USA',
+        releaseDate: '2009-12-18',
+        popularity: 5
+      },
+      {
+        id: '2',
+        title: 'Interstellar',
+        poster: 'interstellar.jpg',
+        duration: 169,
+        country: 'USA',
+        releaseDate: '2014-11-07',
+        popularity: 4
+      }
     ];
 
-    service.getMoviesByGenreId(1).subscribe(movies => {
+    service.getMoviesByGenre(1).subscribe((movies: Movie[]) => {
       expect(movies.length).toBe(2);
-      expect(movies).toEqual(mockMovies);
+      expect(movies[0].title).toBe('Avatar');
+      expect(movies[1].title).toBe('Interstellar');
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/1/movies`);
+    const req = httpMock.expectOne(`${baseUrl}/1/movies`);
     expect(req.request.method).toBe('GET');
     req.flush(mockMovies);
   });

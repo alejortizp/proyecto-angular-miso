@@ -27,11 +27,11 @@ export class GenreDetailComponent implements OnInit {
   }
 
   getGenreDetail(): void {
-    this.genreService.getGenreById(this.genreId).subscribe(data => {
+    this.genreService.getGenreById(this.genreId).subscribe((data: Genre) => {
       this.genre = data;
     });
 
-    this.genreService.getMoviesByGenre(this.genreId).subscribe(data => {
+    this.genreService.getMoviesByGenre(this.genreId).subscribe((data: Movie[]) => {
       this.movies = data.sort((a, b) => a.title.localeCompare(b.title));
       this.filteredMovies = [...this.movies];
     });
