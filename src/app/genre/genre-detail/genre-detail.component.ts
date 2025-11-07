@@ -1,77 +1,46 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Genre } from '../genre.model';
-import { GenreService } from '../genre.service';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Genre } from './genre';
+import { Movie } from '../movie/movie';
+import { GenreService } from './genre.service';
 
-/**
- * Componente que muestra el detalle de un género específico
- * y las películas asociadas a ese género
- */
 @Component({
   selector: 'app-genre-detail',
   templateUrl: './genre-detail.component.html',
-  styleUrls: ['./genre-detail.component.scss']
+  styleUrls: ['./genre-detail.component.css']
 })
-export class GenreDetailComponent implements OnChanges {
-  @Input() genreId!: number;
-  
-  genre?: Genre;
-  movies: any[] = [];
-  loading: boolean = false;
-  error: string = '';
+export class GenreDetailComponent implements OnInit {
+  genre!: Genre;
+  movies: Movie[] = [];
+  filteredMovies: Movie[] = [];
+  searchText: string = '';
+  genreId!: number;
 
-  constructor(private genreService: GenreService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private genreService: GenreService
+  ) {}
 
-  /**
-   * Detecta cambios en el Input genreId y carga los datos
-   * @param changes Cambios detectados en los Inputs
-   */
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['genreId'] && this.genreId) {
-      this.loadGenreDetail();
-      this.loadMovies();
-    }
+  ngOnInit(): void {
+    this.genreId = Number(this.route.snapshot.paramMap.get('id'));
+    this.getGenreDetail();
   }
 
-  /**
-   * Carga los detalles del género seleccionado
-   */
-  private loadGenreDetail(): void {
-    this.loading = true;
-    this.error = '';
-    
-    this.genreService.getGenreById(this.genreId).subscribe({
-      next: (data: Genre) => {
-        this.genre = data;
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = 'Error al cargar el detalle del género.';
-        this.loading = false;
-        console.error('Error loading genre detail:', err);
-      }
+  getGenreDetail(): void {
+    this.genreService.getGenreById(this.genreId).subscribe(data => {
+      this.genre = data;
+    });
+
+    this.genreService.getMoviesByGenre(this.genreId).subscribe(data => {
+      this.movies = data.sort((a, b) => a.title.localeCompare(b.title));
+      this.filteredMovies = [...this.movies];
     });
   }
 
-  /**
-   * Carga las películas asociadas al género
-   */
-  private loadMovies(): void {
-    this.genreService.getMoviesByGenreId(this.genreId).subscribe({
-      next: (data: any[]) => {
-        this.movies = data;
-      },
-      error: (err) => {
-        console.error('Error loading movies for genre:', err);
-        this.movies = [];
-      }
-    });
-  }
-
-  /**
-   * Recarga los datos del género
-   */
-  reload(): void {
-    this.loadGenreDetail();
-    this.loadMovies();
+  filterMovies(): void {
+    const text = this.searchText.toLowerCase().trim();
+    this.filteredMovies = this.movies.filter(m =>
+      m.title.toLowerCase().includes(text)
+    );
   }
 }

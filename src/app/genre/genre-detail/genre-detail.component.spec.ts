@@ -1,46 +1,72 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { SimpleChange } from '@angular/core';
-import { of, throwError } from 'rxjs';
+import { RouterTestingModule } from '@angular/router/testing';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 
 import { GenreDetailComponent } from './genre-detail.component';
-import { GenreService } from '../genre.service';
-import { Genre } from '../genre.model';
+import { GenreService } from './genre.service';
+import { Genre } from './genre';
+import { Movie } from '../movie/movie';
 
 describe('GenreDetailComponent', () => {
   let component: GenreDetailComponent;
   let fixture: ComponentFixture<GenreDetailComponent>;
-  let genreService: jasmine.SpyObj<GenreService>;
+  let mockGenreService: jasmine.SpyObj<GenreService>;
 
-  const mockGenre: Genre = {
-    id: 1,
-    name: 'Acción',
-    description: 'Películas de acción'
-  };
+  const mockGenre: Genre = new Genre(1, 'Action');
 
-  const mockMovies = [
-    { id: 1, title: 'Movie 1', genreId: 1 },
-    { id: 2, title: 'Movie 2', genreId: 1 }
-  ];
+  const mockMovies: Movie[] = (() => {
+    const a = new Movie();
+    a.id = '1';
+    a.title = 'Avatar';
+    a.poster = 'avatar.jpg';
+    a.duration = 120;
+    a.country = 'USA';
+    a.releaseDate = new Date('2009-12-18');
+    a.popularity = 5;
 
-  beforeEach(async () => {
-    const genreServiceSpy = jasmine.createSpyObj('GenreService', [
-      'getGenreById',
-      'getMoviesByGenreId'
-    ]);
+    const b = new Movie();
+    b.id = '2';
+    b.title = 'Interstellar';
+    b.poster = 'interstellar.jpg';
+    b.duration = 169;
+    b.country = 'USA';
+    b.releaseDate = new Date('2014-11-07');
+    b.popularity = 4;
 
-    await TestBed.configureTestingModule({
-      declarations: [GenreDetailComponent],
-      imports: [HttpClientTestingModule],
-      providers: [
-        { provide: GenreService, useValue: genreServiceSpy }
-      ]
-    }).compileComponents();
-
-    genreService = TestBed.inject(GenreService) as jasmine.SpyObj<GenreService>;
-  });
+    return [a, b];
+  })();
 
   beforeEach(() => {
+    mockGenreService = jasmine.createSpyObj('GenreService', [
+      'getGenreById',
+      'getMoviesByGenre'
+    ]);
+
+    TestBed.configureTestingModule({
+      declarations: [GenreDetailComponent],
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule,
+        FormsModule
+      ],
+      providers: [
+        { provide: GenreService, useValue: mockGenreService },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              paramMap: {
+                get: (key: string) => '1'
+              }
+            }
+          }
+        }
+      ]
+    });
+
     fixture = TestBed.createComponent(GenreDetailComponent);
     component = fixture.componentInstance;
   });
@@ -49,44 +75,134 @@ describe('GenreDetailComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load genre detail when genreId changes', () => {
-    genreService.getGenreById.and.returnValue(of(mockGenre));
-    genreService.getMoviesByGenreId.and.returnValue(of(mockMovies));
+  it('should initialize genre and movies on ngOnInit', () => {
+    mockGenreService.getGenreById.and.returnValue(of(mockGenre));
+    mockGenreService.getMoviesByGenre.and.returnValue(of(mockMovies));
 
-    component.genreId = 1;
-    component.ngOnChanges({
-      genreId: new SimpleChange(null, 1, true)
-    });
+    component.ngOnInit();
 
-    expect(genreService.getGenreById).toHaveBeenCalledWith(1);
-    expect(genreService.getMoviesByGenreId).toHaveBeenCalledWith(1);
     expect(component.genre).toEqual(mockGenre);
-    expect(component.movies).toEqual(mockMovies);
+    expect(component.movies.length).toBe(2);
+    expect(component.filteredMovies.length).toBe(2);
   });
 
-  it('should handle error when loading genre detail', () => {
-    genreService.getGenreById.and.returnValue(
-      throwError(() => new Error('Error loading genre'))
-    );
-    genreService.getMoviesByGenreId.and.returnValue(of(mockMovies));
+  it('should get genreId from route params', () => {
+    mockGenreService.getGenreById.and.returnValue(of(mockGenre));
+    mockGenreService.getMoviesByGenre.and.returnValue(of(mockMovies));
 
-    component.genreId = 1;
-    component.ngOnChanges({
-      genreId: new SimpleChange(null, 1, true)
-    });
+    component.ngOnInit();
 
-    expect(component.error).toBeTruthy();
-    expect(component.loading).toBeFalse();
+    expect(component.genreId).toBe(1);
   });
 
-  it('should reload data', () => {
-    genreService.getGenreById.and.returnValue(of(mockGenre));
-    genreService.getMoviesByGenreId.and.returnValue(of(mockMovies));
+  it('should sort movies alphabetically by title', () => {
+    const unsortedMovies: Movie[] = [...mockMovies].reverse();
+    mockGenreService.getGenreById.and.returnValue(of(mockGenre));
+    mockGenreService.getMoviesByGenre.and.returnValue(of(unsortedMovies));
 
-    component.genreId = 1;
-    component.reload();
+    component.ngOnInit();
 
-    expect(genreService.getGenreById).toHaveBeenCalled();
-    expect(genreService.getMoviesByGenreId).toHaveBeenCalled();
+    expect(component.movies[0].title).toBe('Avatar');
+    expect(component.movies[1].title).toBe('Interstellar');
+  });
+
+  it('should filter movies by search text', () => {
+    mockGenreService.getGenreById.and.returnValue(of(mockGenre));
+    mockGenreService.getMoviesByGenre.and.returnValue(of(mockMovies));
+    component.ngOnInit();
+
+    component.searchText = 'avatar';
+    component.filterMovies();
+
+    expect(component.filteredMovies.length).toBe(1);
+    expect(component.filteredMovies[0].title).toBe('Avatar');
+  });
+
+  it('should filter movies case insensitively', () => {
+    mockGenreService.getGenreById.and.returnValue(of(mockGenre));
+    mockGenreService.getMoviesByGenre.and.returnValue(of(mockMovies));
+    component.ngOnInit();
+
+    component.searchText = 'INTERSTELLAR';
+    component.filterMovies();
+
+    expect(component.filteredMovies.length).toBe(1);
+    expect(component.filteredMovies[0].title).toBe('Interstellar');
+  });
+
+  it('should return all movies when search text is empty', () => {
+    mockGenreService.getGenreById.and.returnValue(of(mockGenre));
+    mockGenreService.getMoviesByGenre.and.returnValue(of(mockMovies));
+    component.ngOnInit();
+
+    component.searchText = '';
+    component.filterMovies();
+
+    expect(component.filteredMovies.length).toBe(2);
+  });
+
+  it('should return empty array when no movies match search', () => {
+    mockGenreService.getGenreById.and.returnValue(of(mockGenre));
+    mockGenreService.getMoviesByGenre.and.returnValue(of(mockMovies));
+    component.ngOnInit();
+
+    component.searchText = 'xyz';
+    component.filterMovies();
+
+    expect(component.filteredMovies.length).toBe(0);
+  });
+
+  it('should trim whitespace from search text', () => {
+    mockGenreService.getGenreById.and.returnValue(of(mockGenre));
+    mockGenreService.getMoviesByGenre.and.returnValue(of(mockMovies));
+    component.ngOnInit();
+
+    component.searchText = '  avatar  ';
+    component.filterMovies();
+
+    expect(component.filteredMovies.length).toBe(1);
+    expect(component.filteredMovies[0].title).toBe('Avatar');
+  });
+
+  it('should handle empty movies list', () => {
+    mockGenreService.getGenreById.and.returnValue(of(mockGenre));
+    mockGenreService.getMoviesByGenre.and.returnValue(of([]));
+
+    component.ngOnInit();
+
+    expect(component.movies.length).toBe(0);
+    expect(component.filteredMovies.length).toBe(0);
+  });
+
+  it('should maintain original movies array after filtering', () => {
+    mockGenreService.getGenreById.and.returnValue(of(mockGenre));
+    mockGenreService.getMoviesByGenre.and.returnValue(of(mockMovies));
+    component.ngOnInit();
+
+    const originalLength = component.movies.length;
+
+    component.searchText = 'avatar';
+    component.filterMovies();
+
+    expect(component.movies.length).toBe(originalLength);
+    expect(component.filteredMovies.length).toBe(1);
+  });
+
+  it('should call getGenreById with correct id', () => {
+    mockGenreService.getGenreById.and.returnValue(of(mockGenre));
+    mockGenreService.getMoviesByGenre.and.returnValue(of(mockMovies));
+
+    component.ngOnInit();
+
+    expect(mockGenreService.getGenreById).toHaveBeenCalledWith(1);
+  });
+
+  it('should call getMoviesByGenre with correct id', () => {
+    mockGenreService.getGenreById.and.returnValue(of(mockGenre));
+    mockGenreService.getMoviesByGenre.and.returnValue(of(mockMovies));
+
+    component.ngOnInit();
+
+    expect(mockGenreService.getMoviesByGenre).toHaveBeenCalledWith(1);
   });
 });

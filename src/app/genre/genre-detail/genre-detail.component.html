@@ -1,84 +1,54 @@
-<div class="genre-detail-container">
-  
-  <!-- Loading Spinner -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>Cargando detalle del género...</p>
+<div class="container mt-4">
+  <div class="header-section">
+    <h2 class="fw-bold mb-4">Genre Detail</h2>
+    <a routerLink="/genres" class="btn btn-outline-secondary">Back to Genres</a>
   </div>
 
-  <!-- Error Message -->
-  <div *ngIf="error && !loading" class="error-message">
-    <p>{{ error }}</p>
-    <button (click)="reload()" class="btn-retry">Reintentar</button>
+  <!-- Información del género (Maestro) -->
+  <div class="genre-info-card" *ngIf="genre">
+    <h3>{{ genre.type }}</h3>
+    <p class="text-muted">Genre ID: {{ genre.id }}</p>
   </div>
 
-  <!-- Genre Detail Content -->
-  <div *ngIf="genre && !loading" class="detail-content">
-    
-    <!-- Header Section -->
-    <div class="detail-header">
-      <div class="genre-badge">
-        <i class="icon-genre"></i>
-      </div>
-      <div class="genre-info">
-        <h2>{{ genre.name }}</h2>
-        <p class="genre-id">ID: {{ genre.id }}</p>
-      </div>
+  <!-- Lista de películas del género (Detalle) -->
+  <div class="movies-section">
+    <h4 class="fw-bold mb-3">Movies in this Genre</h4>
+
+    <div class="search-bar">
+      <input
+        type="text"
+        placeholder="Filter by title"
+        [(ngModel)]="searchText"
+        class="form-control"
+      />
+      <button class="btn btn-dark" (click)="filterMovies()">Search</button>
     </div>
 
-    <!-- Description Section -->
-    <div class="detail-section">
-      <h3>Descripción</h3>
-      <p class="description">
-        {{ genre.description || 'No hay descripción disponible para este género.' }}
-      </p>
+    <div class="movies-count" *ngIf="filteredMovies.length > 0">
+      <p>Showing {{ filteredMovies.length }} movie(s)</p>
     </div>
 
-    <!-- Movies Section -->
-    <div class="detail-section movies-section">
-      <h3>
-        Películas Asociadas 
-        <span class="count-badge">{{ movies.length }}</span>
-      </h3>
-      
-      <div *ngIf="movies.length > 0" class="movies-grid">
-        <div *ngFor="let movie of movies" class="movie-card">
-          <div class="movie-poster">
-            <img 
-              [src]="movie.posterUrl || 'assets/images/no-poster.jpg'" 
-              [alt]="movie.title"
-              onerror="this.src='assets/images/no-poster.jpg'"
-            >
-          </div>
-          <div class="movie-info">
-            <h4 class="movie-title">{{ movie.title }}</h4>
-            <p class="movie-year" *ngIf="movie.releaseYear">{{ movie.releaseYear }}</p>
-            <p class="movie-duration" *ngIf="movie.duration">{{ movie.duration }} min</p>
-          </div>
+    <div class="movies-grid" *ngIf="filteredMovies.length > 0">
+      <div class="movie-card" *ngFor="let movie of filteredMovies">
+        <img [src]="movie.poster" [alt]="movie.title" />
+        <h6>{{ movie.title }}</h6>
+        <div class="meta">
+          <span>{{ movie.country }}</span>
+          <span>{{ movie.duration }} hrs</span>
         </div>
-      </div>
-
-      <div *ngIf="movies.length === 0" class="no-movies">
-        <i class="icon-no-movies"></i>
-        <p>No hay películas asociadas a este género.</p>
+        <div class="meta">
+          <span>Popularity: {{ movie.popularity }}</span>
+        </div>
+        <small>{{ movie.releaseDate | date:'yyyy-MM-dd' }}</small>
       </div>
     </div>
 
-    <!-- Statistics Section (Optional) -->
-    <div class="detail-section statistics-section">
-      <h3>Estadísticas</h3>
-      <div class="stats-grid">
-        <div class="stat-item">
-          <span class="stat-label">Total de Películas</span>
-          <span class="stat-value">{{ movies.length }}</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">Género ID</span>
-          <span class="stat-value">{{ genre.id }}</span>
-        </div>
-      </div>
+    <div class="no-results" *ngIf="filteredMovies.length === 0 && movies.length > 0">
+      <p>No movies found matching your search.</p>
     </div>
 
+    <div class="no-movies" *ngIf="movies.length === 0">
+      <p>No movies available for this genre.</p>
+    </div>
   </div>
 </div>
-
