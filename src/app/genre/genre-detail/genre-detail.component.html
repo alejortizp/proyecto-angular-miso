@@ -1,3 +1,84 @@
-<p>
-  genre-detail works!
-</p>
+<div class="genre-detail-container">
+  
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Cargando detalle del género...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error && !loading" class="error-message">
+    <p>{{ error }}</p>
+    <button (click)="reload()" class="btn-retry">Reintentar</button>
+  </div>
+
+  <!-- Genre Detail Content -->
+  <div *ngIf="genre && !loading" class="detail-content">
+    
+    <!-- Header Section -->
+    <div class="detail-header">
+      <div class="genre-badge">
+        <i class="icon-genre"></i>
+      </div>
+      <div class="genre-info">
+        <h2>{{ genre.name }}</h2>
+        <p class="genre-id">ID: {{ genre.id }}</p>
+      </div>
+    </div>
+
+    <!-- Description Section -->
+    <div class="detail-section">
+      <h3>Descripción</h3>
+      <p class="description">
+        {{ genre.description || 'No hay descripción disponible para este género.' }}
+      </p>
+    </div>
+
+    <!-- Movies Section -->
+    <div class="detail-section movies-section">
+      <h3>
+        Películas Asociadas 
+        <span class="count-badge">{{ movies.length }}</span>
+      </h3>
+      
+      <div *ngIf="movies.length > 0" class="movies-grid">
+        <div *ngFor="let movie of movies" class="movie-card">
+          <div class="movie-poster">
+            <img 
+              [src]="movie.posterUrl || 'assets/images/no-poster.jpg'" 
+              [alt]="movie.title"
+              onerror="this.src='assets/images/no-poster.jpg'"
+            >
+          </div>
+          <div class="movie-info">
+            <h4 class="movie-title">{{ movie.title }}</h4>
+            <p class="movie-year" *ngIf="movie.releaseYear">{{ movie.releaseYear }}</p>
+            <p class="movie-duration" *ngIf="movie.duration">{{ movie.duration }} min</p>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="movies.length === 0" class="no-movies">
+        <i class="icon-no-movies"></i>
+        <p>No hay películas asociadas a este género.</p>
+      </div>
+    </div>
+
+    <!-- Statistics Section (Optional) -->
+    <div class="detail-section statistics-section">
+      <h3>Estadísticas</h3>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-label">Total de Películas</span>
+          <span class="stat-value">{{ movies.length }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Género ID</span>
+          <span class="stat-value">{{ genre.id }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
