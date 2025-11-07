@@ -6,11 +6,13 @@ import { Genre } from './genre.model';
 /**
  * Servicio para gestionar las operaciones relacionadas con géneros
  */
+// src/app/genre/genre.service.ts
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class GenreService {
-  private apiUrl = 'http://localhost:3000/api/genres'; // URL del API
+  private apiUrl = `${environment.apiUrl}/genres`; // URL del API
 
   constructor(private http: HttpClient) { }
 
