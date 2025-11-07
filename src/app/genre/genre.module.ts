@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { GenreComponent } from './genre.component';
-import { GenreDetailComponent } from './genre-detail.component';
+import { GenreDetailComponent } from './genre-detail/genre-detail.component';
 
 @NgModule({
   imports: [

@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Genre } from './genre';
-import { Movie } from '../movie/movie';
-import { GenreService } from './genre.service';
+import { Genre } from '../genre';
+import { Movie } from '../../movie/movie';
+import { GenreService } from '../genre.service';
 
 @Component({
   selector: 'app-genre-detail',

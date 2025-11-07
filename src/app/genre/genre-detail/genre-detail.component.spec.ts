@@ -8,9 +8,9 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { GenreDetailComponent } from './genre-detail.component';
-import { GenreService } from './genre.service';
-import { Genre } from './genre';
-import { Movie } from '../movie/movie';
+import { GenreService } from '../genre.service';
+import { Genre } from '../genre';
+import { Movie } from '../../movie/movie';
 
 describe('GenreDetailComponent', () => {
   let component: GenreDetailComponent;
