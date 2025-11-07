@@ -4,7 +4,7 @@ import { DirectorComponent } from './director/director.component';
 import { MovieComponent } from './movie/movie.component';
 import { ActorComponent } from './actor/actor.component';
 import { GenreComponent } from './genre/genre.component';
-import { GenreDetailComponent } from './genre/genre-detail.component';
+import { GenreDetailComponent } from './genre/genre-detail/genre-detail.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/movies', pathMatch: 'full' },
