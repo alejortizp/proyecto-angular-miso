@@ -14,7 +14,7 @@ export class GenreDetailComponent implements OnInit {
   movies: Movie[] = [];
   filteredMovies: Movie[] = [];
   searchText: string = '';
-  genreId!: number;
+  genreId!: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -22,20 +22,16 @@ export class GenreDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // ✅ CORRECCIÓN: Mejor manejo del parámetro de ruta
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       console.log('ID from route:', id);
       
       if (id) {
-        this.genreId = parseInt(id, 10);
-        console.log('Parsed genreId:', this.genreId);
-        
-        if (!isNaN(this.genreId)) {
-          this.getGenreDetail();
-        } else {
-          console.error('Invalid genre ID:', id);
-        }
+        this.genreId = id;  // ← Usar directamente como string
+        console.log('Genre ID (UUID):', this.genreId);
+        this.getGenreDetail();
+      } else {
+        console.error('No genre ID found in route');
       }
     });
   }

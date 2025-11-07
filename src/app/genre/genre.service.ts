@@ -17,15 +17,15 @@ export class GenreService {
     return this.http.get<Genre[]>(this.apiUrl);
   }
 
-  getGenreById(id: number): Observable<Genre> {
+  getGenreById(id: string | number): Observable<Genre> {
     return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
-      map(item => new Genre(item.id, item.type))
+      map((item: any) => new Genre(item.id, item.type))
     );
   }
 
-  getMoviesByGenre(genreId: number): Observable<Movie[]> {
+  getMoviesByGenre(genreId: string | number): Observable<Movie[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${genreId}/movies`).pipe(
-      map(items => items.map(item => {
+      map((items: any[]) => items.map((item: any) => {
         const movie: Movie = new Movie();
         movie.id = item.id;
         movie.title = item.title;
@@ -38,4 +38,3 @@ export class GenreService {
       }))
     );
   }
-}
