@@ -1,0 +1,37 @@
+<div class="modal-backdrop" (click)="onBackdropClick()"></div>
+<div class="movie-modal">
+  <div class="modal-hero">
+    <img *ngIf="movieDetail?.poster" [src]="movieDetail?.poster" [alt]="movieDetail?.title" />
+    <div class="hero-overlay"></div>
+  </div>
+  <div class="modal-body">
+    <div class="modal-inner">
+      <h3 class="modal-title">{{ movieDetail?.title }}</h3>
+      <div class="modal-actions">
+        <a *ngIf="movieDetail?.youtubeTrailer?.url" class="btn btn-danger" [href]="movieDetail?.youtubeTrailer?.url" target="_blank" rel="noopener noreferrer">
+          <i class="bi bi-youtube me-1"></i> Watch Trailer
+        </a>
+      </div>
+      <div class="modal-meta">
+        <div>
+          {{ movieDetail?.genre?.type || '' }} - {{ movieDetail?.duration }} hours - {{ movieDetail?.country }}
+        </div>
+        <div class="mt-2">
+          <strong>Directed by:</strong> {{ movieDetail?.director?.name }}
+        </div>
+        <div class="mt-1">
+          <strong>Cast:</strong> {{ getActorNames() }}
+        </div>
+        <div class="mt-2">
+          <strong>Popularity:</strong> {{ movieDetail?.popularity }}
+        </div>
+        <div class="mt-2">
+          <strong>Release date:</strong> {{ movieDetail?.releaseDate | date:'yyyy-MM-dd' }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="modal-close" (click)="close.emit()" aria-label="Close"></button>
+</div>
+
+

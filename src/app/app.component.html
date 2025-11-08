@@ -1,15 +1,12 @@
-<!-- app.component.html -->
-<div style="text-align:center; margin-bottom: 20px;">
-  <h1>Movies</h1>
-
-  <nav style="margin-bottom: 30px;">
-    <a routerLink="/movies" routerLinkActive="active" style="margin: 0 10px;">Movies</a>
-    <a routerLink="/directors" routerLinkActive="active" style="margin: 0 10px;">Directors</a>
-    <a routerLink="/actors" routerLinkActive="active" style="margin: 0 10px;">Actors</a>
-    <a routerLink="/genres" routerLinkActive="active" style="margin: 0 10px;">Genres</a>
-    <a style="margin: 0 10px; pointer-events: none; color: gray; text-decoration: none; cursor: default;">Platforms</a>
+<header class="app-navbar">
+  <div class="brand">MOVIES</div>
+  <nav class="nav-links">
+    <a routerLink="/movies" routerLinkActive="active">Movies</a>
+    <a routerLink="/directors" routerLinkActive="active">Directors</a>
+    <a routerLink="/actors" routerLinkActive="active">Actors</a>
+    <a routerLink="/genres" routerLinkActive="active">Genres</a>
+    <span class="nav-disabled">Platforms</span>
   </nav>
-</div>
+</header>
 
-<!-- Aquí se cargará el componente seleccionado -->
 <router-outlet></router-outlet>

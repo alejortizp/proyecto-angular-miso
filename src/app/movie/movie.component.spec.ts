@@ -2,11 +2,13 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 
 import { MovieComponent } from './movie.component';
 import { MovieService } from './movie.service';
 import { Movie } from './movie';
+import { MovieDetailComponent } from './movie-detail.component';
 
 describe('MovieComponent', () => {
   let component: MovieComponent;
@@ -48,8 +50,8 @@ describe('MovieComponent', () => {
     mockMovieService = jasmine.createSpyObj('MovieService', ['getMovies']);
 
     TestBed.configureTestingModule({
-      declarations: [MovieComponent],
-      imports: [HttpClientTestingModule],
+      declarations: [MovieComponent, MovieDetailComponent],
+      imports: [HttpClientTestingModule, FormsModule],
       providers: [
         { provide: MovieService, useValue: mockMovieService }
       ]
@@ -70,6 +72,14 @@ describe('MovieComponent', () => {
 
     expect(component.movies.length).toBe(3);
     expect(component.filteredMovies.length).toBe(3);
+  });
+
+  it('should sort movies alphabetically by title on init', () => {
+    mockMovieService.getMovies.and.returnValue(of(mockMovies));
+    component.ngOnInit();
+    const titles = component.movies.map(m => m.title);
+    const sorted = [...titles].sort((a, b) => a.localeCompare(b));
+    expect(titles).toEqual(sorted);
   });
 
   it('should filter movies by search text', () => {
@@ -112,6 +122,30 @@ describe('MovieComponent', () => {
     component.filterMovies();
 
     expect(component.filteredMovies.length).toBe(0);
+  });
+
+  it('should toggle search visibility', () => {
+    expect(component.showSearch).toBeFalse();
+    component.toggleSearch();
+    expect(component.showSearch).toBeTrue();
+    component.toggleSearch();
+    expect(component.showSearch).toBeFalse();
+  });
+
+  it('should open and close detail modal via child output', () => {
+    mockMovieService.getMovies.and.returnValue(of(mockMovies));
+    component.ngOnInit();
+    const m = component.movies[0];
+    component.openModal(m);
+    expect(component.selectedMovie).toBe(m);
+    expect(component.showModal).toBeTrue();
+
+    fixture.detectChanges();
+    const childDebug = fixture.debugElement.children.find(de => de.componentInstance instanceof MovieDetailComponent);
+    expect(childDebug).toBeDefined();
+    childDebug?.triggerEventHandler('close', {});
+    expect(component.selectedMovie).toBeNull();
+    expect(component.showModal).toBeFalse();
   });
 });
 
