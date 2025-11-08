@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { Director } from './director';
+import { Movie } from '../movie/movie';
 
 import { environment } from '../../environments/environment.development';
 
@@ -18,8 +19,20 @@ constructor(private http: HttpClient) { }
   }
 
   getDirectorById(id: string | number): Observable<Director> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
-      map((item: any) => new Director(item.id, item.name, item.photo, item.nationality, item.birthDate, item.biography))
-    );
-  }
+  return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
+    map((item: any) => {
+      const director = new Director(
+        item.id,
+        item.name,
+        item.photo,
+        item.nationality,
+        item.birthDate,
+        item.biography
+      );
+      (director as any).movies = item.movies || [];
+      return director;
+    })
+  );
+}
+
 }

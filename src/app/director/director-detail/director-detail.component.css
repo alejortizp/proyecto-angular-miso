@@ -1,0 +1,16 @@
+.movie-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.movie-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.movies-section h3 {
+  font-weight: 600;
+}
+
+.biography-text {
+  white-space: pre-line;
+}
