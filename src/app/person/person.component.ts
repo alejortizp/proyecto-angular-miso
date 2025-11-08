@@ -15,13 +15,10 @@ export class PersonComponent implements OnInit {
 
   getPersons() {
     this.personService.getPersons().subscribe(data => {
-      console.log(data);
       this.persons = data;
       console.log(this.persons);
     });
     console.log('After subscribe');
-    
-
   }
 
 
