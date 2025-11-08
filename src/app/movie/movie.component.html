@@ -21,7 +21,7 @@
   </div>
 
   <div class="movies-grid">
-    <div class="movie-card" *ngFor="let m of filteredMovies">
+    <div class="movie-card" *ngFor="let m of filteredMovies" (click)="openModal(m)">
       <div class="poster">
         <img [src]="m.poster" [alt]="m.title" />
       </div>
@@ -29,5 +29,7 @@
     </div>
   </div>
 </div>
+
+<app-movie-detail *ngIf="selectedMovie" [movieDetail]="selectedMovie" (close)="closeModal()"></app-movie-detail>
 
 

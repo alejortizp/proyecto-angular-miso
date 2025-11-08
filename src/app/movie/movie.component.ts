@@ -12,6 +12,8 @@ export class MovieComponent implements OnInit {
   filteredMovies: Movie[] = [];
   searchText: string = '';
   showSearch: boolean = false;
+  showModal: boolean = false;
+  selectedMovie: Movie | null = null;
 
   @ViewChild('searchWrapper', { static: false }) searchWrapper?: ElementRef;
 
@@ -46,6 +48,28 @@ export class MovieComponent implements OnInit {
     if (wrapperEl && !wrapperEl.contains(event.target as Node)) {
       this.showSearch = false;
     }
+  }
+
+  openModal(movie: Movie): void {
+    this.selectedMovie = movie;
+    this.showModal = true;
+  }
+
+  closeModal(): void {
+    this.showModal = false;
+    this.selectedMovie = null;
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.showModal) {
+      this.closeModal();
+    }
+  }
+
+  getActorNames(movie: Movie | null): string {
+    if (!movie || !movie.actors || movie.actors.length === 0) return '';
+    return movie.actors.map(a => a.name).join(', ');
   }
 }
 
