@@ -13,9 +13,9 @@ describe('DirectorComponent', () => {
   let mockDirectorService: jasmine.SpyObj<DirectorService>;
 
   const mockDirectors: Director[] = [
-    new Director('Quentin Tarantino', 'photo1.jpg', 'USA', new Date('1980-01-01'), 'Biography 1'),
-    new Director('Stiven Spilberg', 'photo2.jpg', 'UK', new Date('1985-05-15'), 'Biography 2'),
-    new Director('Vince Gilligan', 'photo3.jpg', 'Canada', new Date('1990-10-20'), 'Biography 3')
+    new Director('1','Quentin Tarantino', 'photo1.jpg', 'USA', new Date('1980-01-01'), 'Biography 1'),
+    new Director('2','Stiven Spilberg', 'photo2.jpg', 'UK', new Date('1985-05-15'), 'Biography 2'),
+    new Director('3','Vince Gilligan', 'photo3.jpg', 'Canada', new Date('1990-10-20'), 'Biography 3')
   ];
 
   beforeEach(async () => {

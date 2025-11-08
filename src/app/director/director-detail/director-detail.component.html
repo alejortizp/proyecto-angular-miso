@@ -1,0 +1,67 @@
+<div class="container mt-4">
+  <div class="header-section d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Director</h2>
+    <a routerLink="/directors" class="btn btn-outline-secondary">Back to Directors</a>
+  </div>
+
+  <div class="director-info-card card shadow-sm p-4" *ngIf="director">
+    <div class="row align-items-start">
+      <div class="col-md-4 text-center">
+        <img
+          [src]="director.photo"
+          [alt]="director.name"
+          class="img-fluid rounded-3 mb-3"
+          style="max-height: 350px; object-fit: cover;"
+        />
+      </div>
+
+      <div class="col-md-8">
+        <h3 class="fw-bold">{{ director.name }}</h3>
+        <p class="mb-1"><strong>Nationality:</strong> {{ director.nationality }}</p>
+        <p class="mb-1"><strong>Birth Date:</strong> {{ director.birthDate | date:'yyyy-MM-dd' }}</p>
+        <hr />
+        <h5 class="fw-bold mt-3">Biography</h5>
+        <p class="biography-text">{{ director.biography }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!director" class="alert alert-warning text-center mt-4">
+    Director information not available.
+  </div>
+
+  <div class="movies-section mt-5" *ngIf="movies && movies.length > 0">
+    <h3 class="fw-bold mb-3">Director's Movies</h3>
+    <p class="text-muted mb-4">Showing {{ movies.length }} movie(s)</p>
+
+    <div class="row g-4">
+      <div
+        class="col-6 col-sm-4 col-md-3 col-lg-2"
+        *ngFor="let movie of movies"
+        [routerLink]="['/movies', movie.id]"
+        style="cursor: pointer;"
+      >
+        <div class="card h-100 text-center shadow-sm movie-card">
+          <img
+            [src]="movie.poster || 'https://via.placeholder.com/107x100?text=No+Image'"
+            [alt]="movie.title"
+            class="card-img-top mx-auto mt-3 rounded-3"
+            style="width: 107px; height: 100px; object-fit: cover;"
+          />
+          <div class="card-body">
+            <h6 class="fw-bold">{{ movie.title }}</h6>
+            <p class="mb-1 text-muted">{{ movie.country }} • {{ movie.duration }}</p>
+            <p class="mb-0 text-muted small">
+              Popularity: {{ movie.popularity }}
+            </p>
+            <p class="text-muted small">{{ movie.releaseDate | date:'yyyy-MM-dd' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="movies && movies.length === 0" class="alert alert-info text-center mt-4">
+    This director has no movies listed.
+  </div>
+</div>

@@ -32,6 +32,7 @@ export class MovieService {
         }
         if (item.director) {
           movie.director = new Director(
+            item.director.id,
             item.director.name,
             item.director.photo,
             item.director.nationality,
@@ -42,6 +43,7 @@ export class MovieService {
         const actorList = item.actors ?? item.cast;
         if (Array.isArray(actorList)) {
           movie.actors = actorList.map((a: any) => new Actor(
+            a.id,
             a.name,
             a.photo,
             a.nationality,

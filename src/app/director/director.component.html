@@ -12,9 +12,11 @@
   </div>
 
   <div class="directors-grid">
-    <div class="director-card" *ngFor="let d of filteredDirectors">
+    <div class="director-card" *ngFor="let d of filteredDirectors" [routerLink]="['/directors', d.id]">
       <img [src]="d.photo" [alt]="d.name" />
-      <h6>{{ d.name }}</h6>
+      <!--h6>{{ d.name }}</h6-->
+      <p class="view-director">{{ d.name }}</p>
     </div>
   </div>
+
 </div>
